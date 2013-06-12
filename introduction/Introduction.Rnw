@@ -1,0 +1,262 @@
+\Sexpr{set_parent('../Thesis.Rnw')}
+\chapter{Introduction \& Preliminaries}
+
+%=====================================================================================================================%
+% Opening chapter
+%=====================================================================================================================%
+
+My interest in this topic originally grew out of a desire to investigate an applied math problem, particularly in game theory, which I encountered in the course of my undergraduate studies. Much of the work in modern game theory as a field is quite abstract, but there are a number of very interesting applications of game theory to modelling real-world (or so we would like to think) scenarios. Evolutionary game theory is one of those applications. A whole variety of problems suitably tackled with relatively concise mathematical models and computer programming techniques have in evolutionary game theory a meaningful home.
+
+Before introducing the main question that I decided to focus on, however, a short crash-course in the prerequisites is appropriate. In what follows, I will attempt to provide an outline of some of the core ideas of game theory pertinent to evolution, and introduce the terminology which is used in the remainder of this thesis.
+
+% Cute picture
+\begin{marginfigure}[-2in]
+\centering
+\includegraphics[width=2in]{../images/blotched-lizard-2.jpg}
+\vspace{0.25cm}
+\caption[\emph{Uta stansburiana}]{The common side-blotched lizard, \emph{Uta stansburiana}. Known for the curious resemblance its mating patterns bear to the game of Rock, Paper, Scissors. Reproduced under the CC-by-SA license from \cite{Tuszynski2011}.}
+\label{fig:lizard}
+\end{marginfigure}
+
+% Rock, Paper, Scissors
+%=====================================================================================================================%
+\section{Rock, Paper, or Scissors?}
+
+Game theory originally emerged as a way to study exactly what you might guess: games. In fact, the earliest known example in the modern era of a `game-theoretic' approach was an attempt by a mathematician to get better at cards\autocite{Dimand1992}! Consider a common formulation of the game Rock, Paper, Scissors (RPS):
+
+\begin{quote}
+There are two players. Each of them chooses between one of the three available \emph{moves}---Rock, Paper, or Scissors---and, in unison, reveal their chosen move to the other player. If the players have chosen the same move, the game is considered a tie. Otherwise, Rock beats Scissors, Paper beats Rock, and Scissors beats Paper.
+    
+Each time a player chooses a winning move, they are awarded a point. Since only the \emph{difference} between the players' point totals would seem to matter, a losing move can be rewarded with the loss of a point to keep the total scores as small as possible\footnote[][-1in]{A win for one player automatically means a loss for the other. This makes RPS what is called a \emph{zero-sum game}. Notice that, by construction, each pair of payoffs in figure~\ref{fig:rps} sums to $0$. One might ask: are there games in which both players can win or lose at once?}.
+\end{quote}
+
+\noindent One way to formally represent this game is with a \emph{payoff matrix}, such as the one in figure~\ref{fig:rps}. The rows correspond to the moves of one player, while the columns correspond to the moves of the other. In each cell there is an ordered pair that represents the \emph{payoff} to each player; in figure~\ref{fig:rps} the payoff to player A is the first number, while the payoff to player B is the second.
+
+% RPS Payoff Matrix
+%=====================================================================================================================%
+\begin{figure}
+\centering
+\begin{tabular}{cr>{\centering}p{2.0cm}p{2.0cm}<{\centering}p{2.0cm}<{\centering}}
+&&\multicolumn{3}{c}{Player B} \\
+\addlinespace[1em]
+&& \bfseries Rock & \bfseries Paper & \bfseries Scissors \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt]{3-5}
+\addlinespace[0.5em]
+\multirow{3}{*}{\rotatebox{90}{\centering Player A}} & \bfseries Rock & $0$, $0$ & $-1$, $1$ & $1$, $-1$ \\
+\addlinespace[0.5em]
+\cmidrule[0.5pt]{3-5}
+\addlinespace[0.5em]
+& \bfseries Paper & $1$, $-1$ & $0$, $0$ & $-1$, $1$ \\
+\addlinespace[0.5em]
+\cmidrule[0.5pt]{3-5}
+\addlinespace[0.5em]
+& \bfseries Scissors & $-1$, $1$ & $1$, $-1$ & $0$, $0$ \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt]{3-5}
+\end{tabular}
+\vspace{0.25cm}
+\caption[Rock, Paper, or Scissors?]{One way of representing the game of Rock, Paper, Scissors. Taking a look at the payoffs, what move should a player choose to win this game?}
+\label{fig:rps}
+\end{figure}
+% End figure
+
+\noindent It may seem as though this table is suitable only for very simple games, but in fact representation in this `normal form' is more powerful than it first appears. One can imagine adding more players by adding a dimension to the matrix (or, as is often preferable, creating a series of matricies where the move of one player is constant), or adding any (finite) number of moves.  In fact, even games where players take turns and have varying quantities of information about their opponents can be tabulated as payoff matrices.
+
+Of course, the ability to write out representations of games doesn't really further our understanding of them. One of the motivating problems of game theory was a desire to understand the `solutions' to a game. That is, how does one `win' at RPS? What \emph{strategy} should one adopt to beat an opponent? Of course, most people quickly realize the futility of trying to win RPS. Thus, any meaningful \emph{solution concept} should reflect the inescapable stalemate we associate with the game. The most intuitive (and certainly the most influential) attempt to understand the solutions to games is called the Nash equilibrium.
+
+\marginnote[-1in]{Solution concepts remain one of the most controversial aspects of game theory, and are prone to a variety of criticism. The most salient is a point about the discrepancy between what might, in theory, be the solution and the way it plays out in reality.}
+
+% NE
+%=====================================================================================================================%
+\section{The Nash Equilibrium}
+
+First, it is important to formally define a strategy, and how it may be distinguished from a move. Consider the case of the game RPS above, where player A decides to play Rock whenever player B is wearing a blue cap, Paper when player B is wearing a green cap, and Scissors otherwise. Or, alternatively, that player A decides to play Rock if it is Monday and Paper otherwise. More realistically, player A may adopt a strategy in response to information about player B's own strategies observed over a long history of playing together.
+
+What do these strategies have in common? Regardless of their level of sophistication, a strategy always specifies what move will be chosen by a player in every possible scenario. The simplest kind of strategy is, of course, to choose one of the available moves and play it every time, without fail. This is referred to as a \emph{pure strategy}, usually to distinguish it from the more general \emph{mixed strategy}, which assigns a probability distribution to each move. Thus, a pure strategy is a mixed strategy where the probability of playing one move is $1$.
+
+The solution to a game that bears the name of a Nash equilibrium (NE) can informally be defined as
+
+\begin{quote}
+A set of strategies, one for each player, such that no individual player has any incentive to deviate from their particular strategy.
+\end{quote}
+
+\noindent from which it is apparent why the term `equilibrium' is considered appropriate. This can be formalized by ensuring that the expected value\footnote{That is, the average value of a player's payoffs if they where to play an infinite number of games, and choose a move randomly based on their mixed strategy.} of the payoff for a player's strategy, given any other strategy played by the other player(s), is not less than the expectated value of the payoff for another strategy available to the player. If $x^*_i$ is an equilibrium strategy available to a player $i$, then we have an NE if and only if
+
+\marginnote{Nash equilibria can also be understood in the language of a \emph{best response}: given the strategy of the other player(s), the best response of a player maximizes the expected value of their payoff. Where best responses coincide for all players, we have a Nash equilibrium.}
+
+\begin{equation}
+    \forall i, \quad E(x^*_i, x^*_{-i}) \geq E(x_i, x^*_{-i})
+\label{eq:ne}
+\end{equation}
+
+\noindent where $x_i$ is any other strategy available to the player, and the expectation values account for the strategies $x^*_{-i}$ chosen by all other players. It is common practice to annotate equilibria as $x^*$.
+
+The idea that players could choose a strategy to minimize their losses or maximize their gains given any strategy of an opponent was popularized in von Neumann and Morgenstern, who showed that a mixed strategy of this kind was always present in two-player, zero-sum games with a finite number of moves\autocite{vonNeumann1944}. Nash's contribution (for which it bears his name) was to generalize this result to finite n-person, non-cooperative\footnote{In this case this just means that players make decisions independently---they do not collude with one another.} games at large\autocite{Nash1950,Nash1951}.
+
+How does this solution concept address the game RPS outlined above? We know from Nash that at least one such equilibrium must exist\autocite{Nash1951}. It cannot be a pure strategy, either: for example, suppose one player chooses to play only Rock. The other player then has an incentive to change their strategy to Paper, which in turn incentivises the first player to choose Scissors, and so on and so forth. It turns out that the sole NE exists when both players choose each move $1/3$ of the time. In this case, no change in either player's probabilities will increase, on average, the number of games they win. If you've played enough RPS, you might have discovered this yourself: choosing a move as randomly as possible is an attractive strategy.
+
+% PD
+%=====================================================================================================================%
+\section{The Prisoner's Dilemma}
+
+One point I raised earlier was whether it makes sense to describe games that are not zero-sum; that is, it may be possible for both players to win---or, as the case may be, lose. Von Neumann and Morgenstern's original work in game theory did not allow meaningful analysis of these kinds of games, but the notion of Nash equilibria significantly expands our capacity to do so.
+
+The cannonical example of a non-zero-sum game is the Prisoner's Dilemma (PD), which is perhaps the best-known game in all of game theory. It is also a source of ongoing, surprising results\footnote{Such as, for example, Press and Dyson's recent observation that a player with a theory of mind can dominate an evolutionary opponent. See \cite{Press2012}.}, and serves as the basic game played by organisms in my final model. The game is usually introduced as follows:
+
+\begin{quote}
+Two suspects of a crime are held in separate cells by the police, who have enough evidence to convict each of them of a minor infraction in their own right, but not enough to convict the two of the major crime. The police offer each suspect the opportunity to act as an informer against the other---thereby guaranteeing a conviction for the major crime---in return for a full pardon. Thus, each suspect faces a choice: to Cooperate with their fellow suspect by remaining silent, or Defect on them and act as an informant.\footnote{Adapted from \cite[pp. 14--15]{Osborne2004}.}
+
+The minor crime carries a sentence of one year in prison, while the major crime demands five. However, if \emph{both} suspects act as informants against one another, each will receive a sentence of three years.
+\end{quote}
+
+\noindent What makes this game so interesting? It is clear that in some sense, what is best for both suspects is to remain silent, and accept the minor sentence. One formalization of this is to point out that the pair (Cooperate, Cooperate) is Pareto-optimal: any deviation results in a loss of welfare for at least one player.
+
+% PD Payoff Matrix
+%=====================================================================================================================%
+\begin{marginfigure}
+\centering
+\begin{tabular}{cr>{\centering}p{1.1cm}p{1.1cm}<{\centering}}
+&&\multicolumn{2}{c}{Player B} \\
+\addlinespace[1em]
+&& \bfseries Co-op. & \bfseries Defect \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt]{3-4}
+\addlinespace[0.5em]
+\multirow{2}{*}{\rotatebox{90}{\centering Player A}} & \bfseries Co-op. & $-1$, $-1$ & $-5$, $0$ \\
+\addlinespace[0.5em]
+\cmidrule[0.5pt]{3-4}
+\addlinespace[0.5em]
+& \bfseries Defect & $0$, $-5$ & $-3$, $-3$ \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt]{3-4}
+\end{tabular}
+\vspace{0.25cm}
+\caption[Cooperate or Defect?]{A representation of the Prisoner's Dilemma. The payoff values are in terms of years `lost' while in prison.}
+\label{fig:pd}
+\end{marginfigure}
+% End figure
+
+However, the scenario in which both players choose to cooperate is not a Nash equilibrium. Both have an incentive to choose defection under these conditions. In fact, one can ascertain quite quickly from figure~\ref{fig:pd} that the only NE is when both players defect on one another. Thus, if we expect players to gravitate towards an NE, the solution of the Prisoner's Dilemma is one in which both players lose---despite the existence of a win-win scenario.
+
+\subsection{The Generalized Prisoner's Dilemma}
+
+This result is not only surprising, but surprisingly relevant. It turns out that the generalized PD is an excellent model for all kinds of \emph{cooperative dilemmas}; that is, scenarios in which cooperation is undermined by a temptation to cheat on one's fellow players. In fact, it is the most stringent form of cooperative dilemma\autocite{Nowak2012}, and thus serves as a way to understand circumstances where cooperation is in theory unlikely to occur.
+
+% Generalized PD Payoff Matrix
+%=====================================================================================================================%
+\begin{marginfigure}
+\centering
+\begin{tabular}{cr>{\centering}p{1.1cm}p{1.1cm}<{\centering}}
+&&\multicolumn{2}{c}{Player B} \\
+\addlinespace[1em]
+&& \bfseries Co-op. & \bfseries Defect \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt]{3-4}
+\addlinespace[0.5em]
+\multirow{2}{*}{\rotatebox{90}{\centering Player A}} & \bfseries Co-op. & $R$, $R$ & $S$, $T$ \\
+\addlinespace[0.5em]
+\cmidrule[0.5pt]{3-4}
+\addlinespace[0.5em]
+& \bfseries Defect & $T$, $S$ & $P$, $P$ \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt]{3-4}
+\end{tabular}
+\vspace{0.25cm}
+\caption[The generalized Prisoner's Dilemma game]{The payoff matrix for the generalized Prisoner's Dilemma. The values must satisfy equation~\ref{eq:gpd-1}, and usually equation~\ref{eq:gpd-2}.}
+\label{fig:gpd}
+\end{marginfigure}
+% End figure
+
+The generalized PD can be represented by the payoff matrix in figure~\ref{fig:gpd}. Any game which satisfies
+
+\marginnote{Historically, the letters $T, R, P, S$ refer to the ``temptation to defect'', ``reward for cooperation'', ``punishment for defection'', and ``sucker's payoff'', respectively.}
+
+\begin{equation}
+    T > R > P > S
+\label{eq:gpd-1}
+\end{equation}
+
+\noindent is, by definition, a Prisoner's Dilemma\autocite[p. 8--10]{Axelrod1984}. Note that there is no requirement that the values of $(R, S, T, P)$ be the same for both players (that is, \emph{symmetric}) as no qualitative change in the NE will occur for players with different payoff values as long as equation~\ref{eq:gpd-1} is met.
+
+Often, games are played several times over by the same players, which grants them a different character under some circumstances. Thus, the payoff values in the generalized PD are usually constructed to satisfy
+
+\begin{equation}
+    R > \frac{T + S}{2}
+\label{eq:gpd-2}
+\end{equation}
+
+\noindent on the basis that the payoff for cooperation must be larger than alternating between cooperation and defection. This game is termed the Iterated Prisoner's Dilemma.
+
+% Evolution
+%=====================================================================================================================%
+\section{Introducing Evolution}
+
+Game theoretic models first gained a foothold in biology in the 1960s, because their mathematical formulations could be applied with surprising ease to biological interactions. Evolutionary game theory (EGT) also introduces its own terminology: players are generally organisms and strategies are the phenotypes of these organisms. EGT removes the language of players choosing moves or making decisions---instead, there are simply organisms who are genetically predisposed to have a given strategy (phenotype), and their interactions with other organisms are phrased in terms of the evolutionary consequences of those phenotypes. The key insight of EGT is to formulate payoffs in terms of Darwinian \emph{fitness}; that is, the terms in a payoff matrix become measurements of the average contribution to the gene pool made by an individual playing such a strategy.
+
+% ESS
+%=====================================================================================================================%
+\subsection{Evolutionarily Stable Strategies}
+
+Evolutionary game theory garned major interest following the coining of its own solution concept---an evolutionarily stable strategy (ESS)---in the early 1970s. The concept was originally formulated by Smith and Price\autocite{Smith1973} to address the fact that arms races among organisms appear to be limited, despite the prospect of high reward in an all-or-nothing contest. The pair suggests that
+
+\begin{quote}
+For a strategy to be evolutionarily stable, a population making use of it must be resistant to invasion by another strategy.
+\end{quote}
+
+\noindent A small caveat---that the invading strategy is initially rare---was later added to make the definition more robust. The concept of an ESS is an attractive biological idea, but it reveals its intimate connection to classical game theory when formulated mathematically, as in Smith and Price\autocite{Smith1973}. It turns out that an ESS is a `refinement' of the Nash equilibrium. That is, all ESS are NE, but not all NE are ESS. Using the same notation as equation~\ref{eq:ne} above, a strategy $x^*$ is an ESS for player $i$ if and only if
+
+\begin{equation}
+    \forall i, \quad E(x^*_i, x^*_{-i}) = E(x_i, x^*_{-i}) \quad \text{and} \quad E(x^*_i, x_{-i}) > E(x_i, x_{-i})
+\end{equation}
+
+\noindent where $x$ is any other strategy. Alternatively,
+
+\begin{equation}
+    E(x^*_i, x^*_{-i}) > E(x_i, x^*_{-i})
+\label{eq:strict-ne}
+\end{equation}
+
+\noindent These equations should look remarkably consistent with the defintion of the NE above. Indeed, equation~\ref{eq:strict-ne} is sometimes called the strict NE, and is sufficient on its own to mandate an ESS.
+
+Armed with this definition, we can make observations about the evolutionary dimension of the two games that have already been discussed. It can be shown that the sole NE of the RPS game (where each strategy is played $1/3$ of the time) is not an ESS. One empirical contribution to EGT has been to point out that the side-blotched lizard pictured in figure~\ref{fig:lizard} has mating strategies that bear a remarkable similarity to the game of RPS. Unsurprisingly, given that RPS has no ESS, the number of males employing each mating strategy varies wildly from year to year, with no apparent emergence of a dominant strategy\autocite[pp. 407]{Osborne2004}.
+
+Secondly, not only is the scenario in which both players defect in the Prisoner's Dilemma the sole NE, it is also an ESS. The conclusion of this would seem to be that a population that faces a cooperative dilemma cannot see the evolution of cooperation. This observation is the central problem of a whole branch of EGT, which I will describe in more detail below.
+
+% Hawk-Dove
+%=====================================================================================================================%
+\begin{marginfigure}
+\begin{tabular}{cc>{\centering}p{1.4cm}p{1.0cm}<{\centering}}
+&&\multicolumn{2}{c}{Player B} \\
+\addlinespace[1em]
+&& \bfseries Hawk & \bfseries Dove \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt](rl){3-4}
+\addlinespace[0.5em]
+\multirow{2}{*}{\rotatebox{90}{Player A}} & \bfseries Hawk & $\frac{V - C}{2}$, $\frac{V - C}{2}$ & $V$, $0$ \\
+\addlinespace[0.5em]
+\cmidrule[0.5pt](rl){3-4}
+\addlinespace[0.5em]
+& \bfseries Dove & $0$, $V$ & $\frac{V}{2}$, $\frac{V}{2}$ \\
+\addlinespace[0.5em]
+\cmidrule[0.8pt](rl){3-4}
+\end{tabular}
+\vspace{0.25cm}
+\caption[The Hawk-Dove Game]{A version of the hawk-dove game. Here $C > V > 0$.}
+\label{fig:hawk-dove}
+\end{marginfigure}
+% End figure
+
+Smith and Price used the ESS to analyse a version of what is called the Hawk-Dove game\footnote{This is in reference to the fact that the aggressive, all-or-nothing strategy reminds us of hawks, while the passive, cooperative strategy reminds us of doves. Although in more recent works it is usually called the snowdrift game, and in pure game theory bears the moniker of the chicken game.}. A simplified, two-player version can be found in figure~\ref{fig:hawk-dove}. In this version, $V$ is the value of some contested resource sought by both players, and $C$ is the cost of prolonged fighting for it. By definition, $C > V > 0$, since the game would be a Prisoner's Dilemma if $C \leq V$. Neither a population of Hawks nor a population of Doves is evolutionarily stable, and since the fitness values for hawk-hawk interactions are negative, we can expect populations where the hawk-dove game is the primary source of fitness to decline to extinction.
+
+\subsection{Modelling Evolution using EGT}
+
+Not yet finished.
+
+% Notes
+\begin{itemize}
+    
+    \item It's often about modelling populations using simulation
+    
+    \item Analytical solutions are not usually forthcoming --- even chaotic behaviour can arise from relatively simple scenarios.
+\end{itemize}

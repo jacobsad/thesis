@@ -1,0 +1,34 @@
+\Sexpr{set_parent('../Thesis.Rnw')}
+\section{What is Individual Variation?}
+
+%=====================================================================================================================%
+% Chapter on animal personality
+%=====================================================================================================================%
+
+\marginnote[0.5in]{No one term for consistent individual variation in organisms seems to have been settled upon to date, so the concept appears in literature as any and all of ``animal personality'', ``behavioural syndrome'', or ``animal temperament''.}
+
+Variation in behaviour between individual organisms, even highly-related organisms, is a ubiquitous quality of biological populations. In fact, it is largely in the context of immediately pressing threats to an organism's life that individuals cease to have novel behaviours. However, for the purposes of simulation the differences between individuals in populations of organisms are usually ignored. A working assumption is made that localized effects of this varation will cancel out for a sufficiently large sample. It is only very recently that individual variation was distinguished from noise and arguments were made that this phenomenon should be relevant to ecology\autocite{Reale2007,McNamara2010}. Much as introducing an element of noise can qualitatively affect the success of some strategies, demanding some varation among individuals in a population appears to affect the evolution of cooperation\autocite{McNamara2004}.
+
+\subsection{Modelling Individual Variation}
+
+Bergmüller et al.\autocite{Bergmueller2010} identify three key features of individual varation in real biological systems which are particularly important to developing a model involving cooperative dilemmas:
+
+\begin{enumerate}
+    \item Variation is consistent for individuals,
+    \item Variation can affect fitness; and
+    \item Variation is hertitable.
+\end{enumerate}
+
+\noindent The first of these features is the primary way in which individual variation differentiates itself from noisy models. In the latter, introducing the potential for making mistakes\autocite{May1987} largely occurs at the level of the interactions---each organism might have, say, a 10\% chance of playing a strategy they would not otherwise choose in each game. In contrast, the demand that variation be consistent means that variation must be attached to individuals themselves.
+
+Consistent individual variation can, in fact, be seen as a challenge to the behavioural plasticity that is often assumed in game theoretic models\autocite{Bergmueller2010}. Both flavours of reciprocal model (as discussed in the previous section) are highly reliant on organisms reacting to a wide variety of factors---such as the perceived reputation of an opponent or their shared history---by changing their strategies accordingly. This may indicate that other mechanisms for the evolution of cooperation are better suited to model scenarios that include individual variation.
+
+The second feature indicates that variation in payoffs has some biological justification. Individual variation in qualities such as boldness and aggressiveness have been shown to affect fitness levels\autocite{Smith2008}, and coupled with observations of variation in the related quality of cooperation\autocite{Schuerch2010,Bergmueller2010}---which is, of course, known to affect fitness---there is an indication that variation in fitness for cooperative dilemmas might provide meaningful descriptions of biological systems.
+
+The last feature demands another dimension be added to models involving individual variation. Estimates vary, but there is evidence to suggest that a non-trivial proportion of variation is inherited\autocite{SomeSource2001}. Of course, one might expect that, over time, variation in a population would decrease\autocite{Bergmueller2010}. But its presence appears not to be eroded by natural selection\autocite{Reale2007}, indicating that some mechanism preserves variation in populations.
+
+\subsection{Interpreting Variation in Payoffs}
+
+Existing analysis of individual variation has focused on variation in strategies, and thus I should devote some attention to defending a shift to variation in payoffs. What does it mean for two organisms to have different payoffs for the same strategy? 
+
+---Different capacity to capitalize on interactions?

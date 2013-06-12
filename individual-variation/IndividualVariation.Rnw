@@ -1,0 +1,251 @@
+\Sexpr{set_parent('../Thesis.Rnw')}
+\section{Constructing Individuals with Variation}
+
+%=====================================================================================================================%
+% Chapter on using Dirichlet distributions to create variance in individual payoffs.
+%=====================================================================================================================%
+
+% R setup for this chapter
+<<, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.path = 'figure/', fig.align = 'center', fig.show = 'hold')
+options(replace.assign = TRUE, width = 80)
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+suppressWarnings(suppressMessages(require(MCMCpack)))
+suppressWarnings(suppressMessages(require(vcd)))
+@
+
+How can players have different payoffs while still playing the same game? Recall that the two-player Prisoner's Dilemma is any game that satisfies the single constraint $T > R > P > S$ for both players, where $T, R, P, S$ are elements of the payoff matrix of the form
+
+\begin{equation*}
+\left( \begin{array}{cc}
+    R & S \\
+    T & P \\
+\end{array} \right)
+\end{equation*}
+
+\noindent for each player. There is no requirement that the game be symmetric. This constraint can be reformulated by specifying three positive parameters $\delta_1, \delta_2, \delta_3$ such that
+
+\begin{equation} \label{eq:parameters}
+    \delta_1 = T - R \quad \delta_2 = R - P \quad \text{and} \quad \delta_3 = P - S
+\end{equation}
+
+\noindent which reduces the exogenous parameters to $S$ and $C$. The context of evolutionary game theory also imposes an additional constraint on individual payoffs: if payoffs are exposed to evolutionary dynamics, we might expect them to increase without bound. In order to avoid the evolution of so-called Darwinian ``monsters'' (?), the sum of these payoffs can be held at some constant bound $C$, yielding the constraint
+
+\begin{equation*}
+	T + R + P  + S = C
+\end{equation*}
+
+\noindent or, in terms of the parameters:
+
+\begin{equation} \label{eq:constraint}
+	\delta_1 + 2 \delta_2 + 3 \delta_3 = C - 4S
+\end{equation}
+
+\noindent For each individual in the population. The problem of simulating a population of individuals with variance in their payoffs that satisfy equations~\ref{eq:parameters} and \ref{eq:constraint} can then be formulated as selecting points from the $2$-simplex $\Delta^2$ defined by
+
+\begin{equation} \label{eq:simplex}
+    \Delta^2 = \{ (\delta_1, 2 \delta_2, 3 \delta_3) \in \mathds{R}^{3+} \mid \delta_1 + 2 \delta_2 + 3 \delta_3 = C - 4S \}
+\end{equation}
+
+\noindent which is represented graphically in figure~\ref{fig:simplex}. A point in the simplex is simply a point within the triangle of the ternary graph.
+
+% The drawing of the simplex for the margin
+%=====================================================================================================================%
+\begin{marginfigure}[-4cm]
+\centering
+\begin{tikzpicture}
+  \node[label=above:{$(0, 0, C - 4s)$}] (1) at (1.5, 2.6) {};
+  \node[label=below:{$(C - 4S, 0, 0)$}] (2) at (0, 0) {};
+  \node[label=below:{$(0, C - 4S, 0)$}] (3) at (3, 0) {};
+  \draw[thick] (1.center) -- (2.center) -- (3.center) -- cycle;
+\end{tikzpicture}
+\caption[A $2$-Simplex for individual variation in the Prisoner's Dilemma]{A $2$-simplex can be conveniently represented in two dimensions as a ternary graph.}
+\label{fig:simplex}
+\end{marginfigure}
+% End drawing
+
+% Introduce the dirichlet distribution itself
+%=====================================================================================================================%
+\section{The Dirichlet Distribution}
+
+One possible solution to the problem of satisfying equation~\ref{eq:simplex} is to select random vectors from a three-dimensional Dirichlet distribution in $d_1 = \frac{\delta_1}{C - 4S}$, $d_2 = \frac{2\delta_2}{C - 4S}$, and $d_3 = \frac{3\delta_3}{C - 4S}$, and then scale the result by $C - 4S$. Given the parameter $\alpha = (\alpha_1, \alpha_2, \alpha_3)$, the probability density of the Dirichlet distribution is given by
+
+\begin{equation*}
+    f(d_1, d_2, d_3; \alpha) = \frac{1}{B(\alpha)} d_1^{\alpha_1 - 1} \: d_2^{\alpha_2 - 1} \: d_3^{\alpha_3 - 1}
+\end{equation*}
+
+\noindent Where $B(\alpha)$ is the multinomial Beta function, and $d_1 + d_2 + d_3 = 1$. This approach also has the attraction of allowing us to specify means for the payoffs, as the Dirichlet distribution has
+
+\begin{equation*}
+    E[d_i] = \frac{\alpha_i}{\alpha_1 + \alpha_2 + \alpha_3}
+\end{equation*}
+
+\noindent Thus for simplicity, we can choose
+
+\begin{equation} \label{eq:alpha-value}
+    \alpha = (C - 4S) (d_1, d_2, d_3) = (\delta_1, 2\delta_2, 3\delta_3)
+\end{equation}
+
+\noindent to get mean values of $d_1$, $d_2$, and $d_3$.
+
+% Use the typical PD
+%=====================================================================================================================%
+\section{Application to the Common Prisoner's Dilemma}
+
+What kind of individual variation do we really get with this model of distribution? Recall that the most common numerical formulation of the Prisoner's Dilemma has payoff matrix
+
+\begin{equation*}
+\left( \begin{array}{cc}
+    3 & 0 \\
+    5 & 1 \\
+\end{array} \right)
+\end{equation*}
+
+\noindent for both players. In terms of the parameters given in equation~\ref{eq:parameters} we have
+
+\begin{equation} \label{eq:pd-params}
+    \delta_1 = 2 \quad \delta_2 = 2 \quad \text{and} \quad \delta_3 = 1
+\end{equation}
+
+\noindent Since $S = 0$, we also have $C = 9$, and thus
+
+\begin{equation}
+    \alpha = (2, 4, 3)
+\end{equation}
+
+\noindent by equation~\ref{eq:alpha-value} will provide appropriate means. The probability density of the Dirichlet distribution with this $\alpha$ appears in figure~\ref{fig:dir-surface}, which has been created using the \emph{lattice} package\autocite{lattice}.
+
+In order to emulate variation around these values, we could sample from a Dirichlet distribution with $\alpha = (2, 4, 3)$ and scale the results by $C$ --- which, in this case, is $9$. This is a fairly simple algorithm, and can be implemented in \emph{R} without much difficulty.
+
+% Draws the Dirichlet distribution for (2, 4, 3) in a ternary surface plot (fig:dir-surfac)
+%=====================================================================================================================%
+<<dir-surface, tidy=FALSE, echo=FALSE, fig.align='center', out.width='0.9\\textwidth', out.height='0.63\\textwidth', fig.cap=paste('A ternary surface plot for the Dirichlet distribution with alpha values (2, 4, 3). This graph has the same form as the simplex in figure~\\ref{fig:simplex} above.'), fig.env='figure', pdfcrop = TRUE>>=
+f <- function(x1, x2){
+    a1<- 4 #3
+    a2<- 3
+    a3<- 2 #5
+    term1 <- gamma(a1+a2+a3)/(gamma(a1)*gamma(a2)*gamma(a3))
+    term2 <- x1^(a1-1)*x2^(a2-1)*(1-x1-x2)^(a3-1)
+    term3 <- (x1 + x2 <  1)
+    term1 * term2 * term3
+}
+
+grade.trellis <- function(from=0.2, to=0.8, step=0.2, col=1, lty=2, lwd=0.5){
+    x1 <- seq(from, to, step)
+    x2 <- x1/2
+    y2 <- x1*sqrt(3)/2
+    x3 <- (1-x1)*0.5+x1
+    y3 <- sqrt(3)/2-x1*sqrt(3)/2
+    panel.segments(x1, 0, x2, y2, col=col, lty=lty, lwd=lwd)
+    panel.text(x1, 0, label=x1, pos=1)
+    panel.segments(x1, 0, x3, y3, col=col, lty=lty, lwd=lwd)
+    panel.text(x2, y2, label=rev(x1), pos=2)
+    panel.segments(x2, y2, 1-x2, y2, col=col, lty=lty, lwd=lwd)
+    panel.text(x3, y3, label=rev(x1), pos=4)
+}
+
+# Triangular coordinates
+trian <- expand.grid(base = seq(0, 1, l = 100 * 2), high = seq(0, sin(pi / 3), l = 87 * 2))
+trian <- subset(trian, (base * sin(pi / 3) * 2) > high)
+trian <- subset(trian, ((1 - base) * sin(pi / 3) * 2) > high)
+
+# Transform from the triangular to simplex coordinates
+trian.trans <- data.frame(x2 = trian$high * 2 / sqrt(3))
+trian.trans$x1 <- trian$base - trian$high / sqrt(3)
+
+# Calculate Dirichlet distribution values in the simplex
+trian$yhat <- f(trian.trans$x1, trian.trans$x2)
+
+# Draw the surface ternary plot
+trellis.par.set(regions=list(col=rev(heat.colors(100))))
+levelplot(yhat~base*high, trian, aspect="iso", xlim=c(-0.1,1.1), ylim=c(-0.1,0.96),
+          xlab=NULL, ylab=NULL, contour=TRUE, cuts = 10,
+          par.settings=list(axis.line=list(col=NA), axis.text=list(col=NA), layout.heights=list(top.padding = -25)),
+          colorkey = list(space = "left", width = 2, height = 0.7),
+          #main = "Probability Distribution for Dir(1, 3, 5)",
+          panel=function(..., at, contour=TRUE, labels=NULL){
+              panel.levelplot(..., at=at, contour=contour, lty=3, lwd=0.5, col=1)
+          })
+
+# Labels for the ternary plot
+trellis.focus("panel", 1, 1, highlight=FALSE)
+panel.segments(c(0,0,0.5), c(0,0,sqrt(3)/2), c(1,1/2,1), c(0,sqrt(3)/2,0))
+grade.trellis()
+#panel.text(0, 0, label="T", pos=2)
+#panel.text(1/2, sqrt(3)/2, label="U", pos=3)
+#panel.text(1, 0, label="R", pos=4)
+trellis.unfocus()
+
+# Labels for the color key
+trellis.focus("legend", 1, 1, highlight=FALSE)
+panel.text(0.8, 0.9, label="Probability\nDensity")
+panel.rect(0.51,0.215,1,0.85)
+trellis.unfocus()
+@
+
+% Section on the R code itself
+%=====================================================================================================================%
+\subsection{Implementation In \emph{R}}
+
+Sampling from Dirichlet distributions can be accomplished very easily in \emph{R}, and several packages provide this functionality. For example, using \emph{MCMCpack}\autocite{mcmcpack}, a random vector can be generated using
+
+<<tidy=FALSE>>=
+# For the common PD, with alpha set to (2, 4, 3)
+set.seed(117)
+alpha <- c(2, 4, 3)
+sum(alpha) * MCMCpack::rdirichlet(1, alpha)
+@
+
+\noindent We can use this simple method to construct an arbitrarily-sized population of individuals with variation, like so:
+
+<<tidy=FALSE>>=
+size <- 10000
+p_data <- replicate(size, sum(alpha) * rdirichlet(1, alpha))
+population <- matrix(p_data, ncol = 3, byrow = T)
+@
+
+\noindent and perform a check to see that $\alpha$ is indeed the mean value:
+
+% Generate the average, so it can be used in the caption
+<<>>=
+# means should be alpha -- 2, 4, 3
+print(avg <- colMeans(population))
+@
+
+\noindent To visualize this sampling we can use a ternary plot, in this case a scatterplot. Again this can be accomplished with several packages. Using \emph{vcd}\autocite{vcd}, we can produce output like that shown in Figure~\ref{fig:ternary}.
+
+% The ternary scatterplot (adjust fig.pos if necessary)
+%=====================================================================================================================%
+<<ternary, tidy=FALSE, fig.align='center', out.width='2in', out.height='2in', fig.height=5, fig.width=5, fig.cap=paste('A ternary scatterplot for the population data.', ' The means for $\\delta_1$, $\\delta_2$, and $\\delta_3$ are ', format(avg[1], digits=3), ', ', format(avg[2], digits=3), ', and ', format(avg[3], digits=3), ', respectively. This graph has the same form as the simplex in figure~\\ref{fig:simplex} above.', sep = ""), fig.env='marginfigure', fig.pos='1in'>>=
+ternaryplot(population, 
+            grid = TRUE,
+            grid_color = "black",
+            labels = "none",
+            coordinates = FALSE, 
+            cex = 0.02,            
+            main = NULL, col = "red")
+@
+
+\noindent Additionally, it may be useful to represent an individual by their actual payoffs, so we can perform a transformation back to $(T, R, P, S)$ guided by equation~\ref{eq:parameters}. Since $S = 0$, we have
+
+\begin{equation*}
+    P = \delta_3 \quad R = \delta_2 + \delta_3 \quad \text{and} \quad T = \delta_1 + \delta_2 + \delta_3
+\end{equation*}
+
+\noindent In \emph{R}, this can be accomplished by operating on the columns
+
+<<>>=
+payoffs <- matrix(0, ncol = 3, nrow = size)
+payoffs[,3] <- population[,3] / 3
+payoffs[,2] <- population[,2] / 2 + payoffs[,3]
+payoffs[,1] <- population[,1] + payoffs[,2]
+@
+
+\noindent Once again, we can verify that the means are as expected:
+
+<<>>=
+# means should be payoffs -- 5, 3, 1
+print(avg <- colMeans(payoffs))
+@
+
+\noindent Thus, we have a method for generating payoff matricies to satisfy equations~\ref{eq:parameters}~and~\ref{eq:constraint} that are nicely distributed in the population.

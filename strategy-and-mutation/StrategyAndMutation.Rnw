@@ -1,0 +1,134 @@
+\Sexpr{set_parent('../Thesis.Rnw')}
+\section{Strategy, Tolerance, and Mutation}
+
+%=====================================================================================================================%
+% Chapter on using continuous strategies and mutation
+%=====================================================================================================================%
+
+% R setup for this chapter
+<<, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.path = 'figure/', fig.align = 'center', fig.show = 'hold')
+options(replace.assign = TRUE, width = 80)
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+suppressWarnings(suppressMessages(require(extrafont)))
+loadfonts(device="postscript")
+suppressWarnings(suppressMessages(require(ggplot2)))
+suppressWarnings(suppressMessages(require(grid)))
+@
+
+In the previous section, I outlined how to include variation in payoffs while maintaining a Prisoner's Dilemma. However, this is not a complete picture of an individual. Players must also possess a description of their strategy in the strategy space, as well as their tolerance for others. In addition, in order to maintain variation in the population, there must be some mechanism for mutation in all of an individual's phenotypes.
+
+% Section on p and t
+%=====================================================================================================================%
+\section{Strategies and Tolerance}
+
+In this model, a strategy is simply defined by the probability of choosing to defect or cooperate. This is not the only way to formulate a continuous Prisoner's Dilemma, but it does allow switching between pure and mixed strategies with ease. Since the player must make \emph{a} choice, this strategy space is just a $1$-simplex that can be represented by the single value $p \in [0,1]$, which represents the probability that a player will cooperate. If players can only have pure strategies, $p$ is simply restricted to $\{0,1\}$.
+
+Similarly, the model defines tolerance as a threshold for cooperation. If a player's opponent does not meet that threshold, the individual drops out of the pair. Thus, the tolerance can be expressed by the single value $t \in [0,1]$, with an `all-or-nothing' possibility if $t \in \{0,1\}$. Giving individuals a strategy and tolerance phenotype therefore reduces to the relatively simple problem of generating numbers between $0$ and $1$.
+
+% Introduce beta
+%=====================================================================================================================%
+\subsection{The Beta Distribution}
+
+The most simple way to generate values of $p$ or $t$ in $[0,1]$ is to make use of a uniformly distributed random generator. However, this provides extremely limited options in terms of setting initial conditions in a population. To broaden the available options, one can make use of a random generator that draws from a Beta distribution.
+
+The Beta distribution requires only two positive ``shape'' parameters $\alpha$ and $\beta$ to produce a wide variety of desirable probability distributions. The density of a given $x$ is
+
+\begin{equation*}
+    f(x, \alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha - 1} \: (1 - x)^{\beta -1}
+\end{equation*}
+
+\noindent where $B(\alpha,\beta)$ is the Beta function. Figure~\ref{fig:beta-dist}, created with \emph{ggplot2}\autocite{ggplot2}, shows a graph of the probability density for some representative shapes. Moreover, the mean of the distribution is simply $\frac{\alpha}{\alpha + \beta}$, yielding highly regular behaviour. Thus, with a little imagination we can create nicely distributed strategy values for the following scenarios and their symmetries:
+
+\begin{itemize}
+    \item[(a)] Uniformly distributed with mean $0.5$. Shape: $(1.0,1.0)$
+    \item[(b)] Normal-like distribution with mean $0.5$. Shape: $(5.0, 5.0)$
+    \item[(c)] High cooperation, very little pure defection; mean $0.71$. Shape: $(5.0, 2.0)$
+    \item[(d)] High cooperation, high defection, few in the middle; mean $0.5$. Shape: $(0.1, 0.1)$
+\end{itemize}
+
+\noindent and similarly for the tolerance value.
+
+% Draws some nice beta densities
+%=====================================================================================================================%
+<<beta-dist, tidy=FALSE, echo=FALSE, warning=FALSE, fig.align='center', out.width='\\textwidth', out.height='0.75\\textwidth', fig.cap=paste('Probability densities for various shapes of the Beta distribution. This distribution allows a wide variety of initial conditions for the level of cooperation.', sep = ""), fig.env='figure'>>=
+l <- c(rep("(2.0, 2.0)", times=100), rep("(1.0, 1.0)", times=100), rep("(5.0, 2.0)", times=100), rep("(0.1, 0.1)", times=100), rep("(5.0, 5.0)", times=100), rep("(2.0, 5.0)", times=100))
+m <- seq(0, 1, length = 100)
+n <- c(dbeta(m, 2, 2), dbeta(m, 1, 1), dbeta(m, 5, 2), dbeta(m, 0.1, 0.1), dbeta(m, 5, 5), dbeta(m, 2, 5))
+df <- data.frame(x = rep(m, times=6), y = n, shape <- l)
+ggplot(df, aes(x = x, y = n)) + geom_line(aes(color = shape)) + xlab('p') + ylab('Probability Density') + ylim(c(0, 2.5)) + 
+    theme(legend.position="left", 
+          #axis.title.y = element_text(family = "Gill Sans MT", size = 18), 
+          axis.title.y = element_blank(),
+          axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18),
+          #legend.title = element_text(family = "Gill Sans MT", size = 18, face = "plain", hjust = 0.5),
+          legend.title = element_blank(),
+          legend.text = element_text(family = "Helvetica", size = 14),
+          legend.key.size = unit(28, "pt"))
+@
+
+\subsection{Implementation in \emph{R}}
+
+Support for drawing from the Beta distribution is built into the core packages of \emph{R}. To create an individual's $p$ value for, say, scenario (a) above, we can simply call
+
+<<>>=
+set.seed(117)
+rbeta(1, 1, 1)
+@
+
+\noindent or, to create a whole population in scenario (a),
+
+<<>>=
+size <- 10000
+population <- rbeta(size, 1, 1)
+# check that the mean is what we expect -- 0.5
+mean(population)
+@
+
+% Draws some more beta densities
+%=====================================================================================================================%
+<<a-pop-dens, tidy=FALSE, echo=FALSE, warning=TRUE, fig.align='center', out.width='2in', out.height='2.2in', fig.cap=paste('Probability density for scenario (a) in red. Notice that it is almost identical to the uniform distribution.', sep = ""), fig.env='marginfigure', fig.pos='-2in'>>=
+ggplot(data.frame(a = population), aes(x = a)) + stat_density(kernel="biweight", aes(x = a, fill = "red", alpha = 0.8)) + 
+    xlab('p') + ylab('Probability Density') + ylim(0, 2.5) +
+    theme(legend.position="none", 
+            axis.title.y = element_text(family = "Helvetica", size = 18),
+            axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18))
+@
+
+\noindent In the more interesting cases of (b), (c), and (d):
+
+<<>>=
+pop_b <- rbeta(size, 5, 5)
+pop_c <- rbeta(size, 5, 2)
+pop_d <- rbeta(size, 0.1, 0.1)
+# check means again -- 0.5, 0.71, 0.5
+c(mean(pop_b), mean(pop_c), mean(pop_d))
+@
+
+\noindent Of course, checking the mean may not assure us this method will provide the correct density, so we can set up a plot to be sure.
+
+<<tidy=FALSE>>=
+pop <- ggplot(data.frame(c = pop_c, b = pop_b, d = pop_d), 
+              aes(x = b)) + 
+       stat_density(kernel="biweight", 
+              aes(x = b, fill = "red", alpha = 0.8)) + 
+       stat_density(kernel="biweight", 
+              aes(x = c, fill = "green", alpha = 0.8)) +
+       stat_density(kernel="biweight", 
+              aes(x = d, fill = "blue", alpha = 0.8))
+@
+
+\noindent The results are visible in figure~\ref{fig:beta-pop-dens}.
+
+% Draws EVEN MORE beta densities
+%=====================================================================================================================%
+<<beta-pop-dens, tidy=FALSE, echo=FALSE, warning=TRUE, fig.align='center', out.width='2in', out.height='2.2in', fig.cap=paste('Probability densities for scenarios (b), (c), and (d) in blue, green, and red respectively.', sep = ""), fig.env='marginfigure', fig.pos='-2in'>>=
+pop + xlab('p') + ylab('Probability Density') + 
+      theme(legend.position="none", 
+            axis.title.y = element_text(family = "Helvetica", size = 18),
+            axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18))
+@
+
+\section{Mutation}
+
+In order for the population to maintain variation among individuals, inheritance must be subject to mutation. In fact, in the context of the evolution of cooperation the presence of a mechanism to preserve varation (usually, mutation) appears to be paramount\autocite{McNamara2004}.

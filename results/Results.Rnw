@@ -1,0 +1,93 @@
+% To generate this document as a single file, use:
+\Sexpr{set_parent('../Thesis.Rnw')}
+\chapter{Results}
+
+%=====================================================================================================================%
+% Final Chapter
+%=====================================================================================================================%
+
+% R setup for this chapter
+<<, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.path = 'figure/', fig.align = 'center', fig.show = 'hold')
+options(replace.assign = TRUE, width = 80)
+options(tikzMetricPackages = c("\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}", "\\usetikzlibrary{calc}", "\\usepackage{hyperref}"))
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+suppressWarnings(suppressMessages(require(extrafont)))
+loadfonts(device="postscript")
+suppressWarnings(suppressMessages(require(ggplot2)))
+suppressWarnings(suppressMessages(require(gridExtra)))
+suppressWarnings(suppressMessages(require(MCMCpack)))
+@
+
+The following section outlines the results of the model I constructed. It has two parts: the first is a series of scenarios designed to test the robustness of the model, and the second is a presentation of the results achieved by running the model to its full potential. In addition to its general construction and functionality outlined in the previous sections, the model makes use of several exogenous parameters. For the sake of brevity in the figure captions, these have been assigned variable names according to table~\ref{tab:vars} below.
+
+\begin{table}
+\centering
+\begin{tabular}{lc}
+\bfseries Exogenous parameter & \bfseries Variable \\
+\cmidrule[0.8pt]{1-2}
+Population size & $N$ \\
+Initial population shape & $shape$ \\
+Mortality / Inverse mean games & $m$ \\
+Standard deviation of mutation & $\mu$ \\
+Cost of pairing & $c$ \\
+Bonus to stable pairs & $b$ \\
+Cooperation level & $p$ \\
+Tolerance level & $t$ \\
+Individual variation parameters & $\delta_1$, $\delta_2$, $\delta_3$ \\
+\cmidrule[0.8pt]{1-2}
+\end{tabular}
+\caption[Exogenous Model Parameters][1.5in]{Exogenous parameters used by the model. For justification, see the earlier section on Method.}
+\label{tab:vars}
+\end{table}
+\vspace{1em}
+
+\noindent The only other parameters passed to the algorithm (presented in the appendix) are the number of generations to consider and the three boolean flags corresponding to pure strategies, pair formation, and individual varation. The alpha value for the Dirichlet distribution is fixed at $\alpha = c(2, 4, 3)$.
+
+\section{Demonstrating Robustness}
+
+In order to demonstrate the robustness of the model, several relatively simple scenarios provide known solutions to aspire to. The most obvious of these is when pair formation does not occur, and thus there is no mechanism to incentivise cooperation. Any population should, under these conditions, eventually witness the rise of a stable regime of defectors.
+
+\subsection{No Pair Formation}
+
+In the simplest case, there is no individual variation or mutation and players are assigned only pure strategies. Under these conditions the only two variables are the mortality rate and the initial distribution of the population. Since mortality rate has no effect on pair formation (as there are no pairs to break up), the number of generations that pass before new offspring are introduced is the only direct effect of a change in mortality rate. Thus, an increase in mortality should increase the speed at which cooperation vanishes, which is exactly what is observed in figure~\ref{fig:s1}.
+
+% Load scenario 1 data
+<<s1-data, echo=FALSE>>=
+load("../experiment/s1.Rdata")
+mort <- c(rep("0.05", times=100), rep("0.10", times=100), rep("0.20", times=100))
+s1_data <- data.frame(cooperation = cooperation, gen = rep(1:generations, times = 3), mort = mort)
+@
+
+% Prints the figure for scenario 1
+<<s1,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3.75, fig.width=5, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('The simplest case. Cooperation levels when pair formation does not occur and players have pure strategies with no individual variation. $N = ', N, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='0in', dev='tikz'>>=
+g <- ggplot(s1_data, aes(x = gen, y = cooperation)) + geom_line(size = 1.5, aes(color = mort)) + xlab('Generations') + ylab('Cooperation Level $p$') #+ ylim(c(0, 1.0))
+g + theme(legend.position=c(0.7, 0.7), legend.title = element_text(face = "plain"), legend.title.align = 0.5, legend.text.align = 0.5) + scale_colour_discrete(name = "Mortality Rate $m$")
+@
+
+% Loads scenario 2 data
+<<s2-data, echo=FALSE>>=
+load("../experiment/s2.Rdata")
+@
+
+Next, we can address a population with a non-uniform distribution. In doing so, it also makes sense to broaden the available strategies beyond the pure options. As a consequence of the model's mechanism for reproduction, this also demands introducing the potential for mutation. Otherwise, one can encounter scenarios in which, by random chance, all individuals in a population are eventually identical, and no further change can occur. An example of this can be seen in figure~\ref{fig:s2}, where by the 400th generation all individuals have the $p$-value \Sexpr{const}.
+
+<<s2,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3.75, fig.width=5, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('A potential failure case. When mutation is not present, it is possible by random drift for sufficiently small populations to become filled with identical individuals. $N = ', N, '$, $m = ', mortality, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='0in', dev='tikz'>>=
+ggplot(s2_data, aes(x = 1:generations, y = cooperation)) + geom_line(size = 1.5, color = "red") + xlab('Generations') + ylab('Cooperation Level $p$') + ylim(c(0.2, 0.8))
+@
+
+% Loads experiment data
+<<s3-data, echo=FALSE>>=
+load("../experiment/s3.Rdata")
+@
+
+Introducing mutation dramatically increases the complexity of the model. An example of this can be seen in figure~\ref{fig:s3}, where a high level of mutation introduces temporary `comebacks' in the level of cooperation in the labelled regions A and B. However, 
+
+<<s3,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3.75, fig.width=5, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('Comebacks. When mutation rates are high, it is possible for unsustainable levels of cooperation to emerge for short periods of time: see in particular the labelled regions A and B. $N = ', N, '$, $m = ', mortality, '$, $\\mu = ', std_dev, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', dev='tikz'>>=
+ggplot(s3_data, aes(x = 1:generations, y = cooperation)) + geom_line(size = 1.5, color = "red") + 
+    xlab('Generations') + ylab('Cooperation Level $p$') + ylim(c(0, 0.3)) + 
+    annotate("text", x = 675, y = 0.04, label = "A") + 
+    annotate("text", x = 1350, y = 0.03, label = "B")
+@
+
+\noindent One consequence of moving away from non-pure strategies is that the timescale increases dramatically.

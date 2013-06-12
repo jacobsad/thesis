@@ -1,0 +1,76 @@
+% To generate this document as a single file, use:
+\Sexpr{set_parent('../Thesis.Rnw')}
+\section{The Mechanisms of Cooperation}
+
+%=====================================================================================================================%
+% Chapter on altruism and cooperation in egt
+%=====================================================================================================================%
+
+% R setup for this chapter
+<<, include=FALSE, cache=FALSE>>=
+opts_chunk$set(fig.path = 'figure/', fig.align = 'center', fig.show = 'hold')
+options(replace.assign = TRUE, width = 80)
+knit_hooks$set(pdfcrop = hook_pdfcrop)
+@
+
+Cooperation and apparent altruism among organisms historically presented something of a challenge for evolutionary theory. Dating back to Darwin, the question has been how the competative, selfish notion of natural selection can be reconciled with the observed phenomenon of widespread cooperation and altruism. Beginning in the 1960s, game theory began to provide some inroads in finding mechanisms for the evolution of cooperation. It remains a highly active area of research, with special issues of \emph{The Journal of Theoretical Biology} and \emph{Philosophical Transactions of the Royal Society B} running on the topic in 2012 and 2010, respectively. What follows is a brief introduction to some of the main mechanisms of cooperation in part suggested by Nowak\autocite{Nowak2012}.
+
+\subsection{Kin Selection}
+
+Both Hamilton\autocite{Hamilton1964} and Dawkins\autocite{Dawkins1976} made use of game-theoretic arguments to provide a theory of inclusive fitness, whereby altruism among organisms is motivated by relatedness---the likelihood that another organism will possess the same genes. The mechanism of ``kin selection'' incentivises cooperation if the relatedness of organisms exceeds the cost-to-benefit ratio of the act. That is,
+
+\begin{equation}
+    r > \frac{c}{b}
+\end{equation}
+
+\noindent where $r$ is the coefficient of relatedness. This equation is known as Hamilton's rule, and provides a template for a variety of rules-of-thumb for understanding mechanisms of cooperation\autocite{Nowak2006}. Inclusive fitness theory has recently come under attack from a small group of biologists, but most observers remain unconvinced. Inclusive fitness is generally seen as an important mechanism for promoting the evolution of cooperation.
+
+\subsection{Direct \& Indirect Reciprocity}
+
+Yet altruism among relatives is not sufficient to explain all kinds of cooperation, since high levels of altruism and cooperation do occur outside of closely related groups of organisms. Trivers\autocite{Trivers1971} proposed the first model of cooperation based on reciprocity for previous encounters, which was hugely popularized by Axelrod's computer tournaments\autocite{Axelrod1981,Axelrod1984}. The latter demonstrated that among a large pool of organisms playing the Prisoner's Dilemma game, a relatively simple strategy of Tit-for-Tat seemed to triumph over all others, and facilitate the evolution of cooperation.
+
+Subsequent research examined the robustness of these results under, for example, trembling-hand scenarios\autocite{May1987} where organisms can make mistakes, and identified a series of highly successful strategies for promoting the evolution of cooperation, including more generous variants of tit-for-tat\autocite{Wu1995} and culminating in the best-known cooperative strategy to date: win-stay, lose-shift\autocite{Nowak1993a,Imhof2007}. A mechanism for direct reciprocity among organisms based on previous encounters is regarded as condusive to the evolution of cooperation. 
+
+Building on the notion of this \emph{direct} reciprocity are mechanisms of \emph{indirect} reciprocity, in which organisms can have access to information about a potential opponent's reputation or standing among other players\autocite{Alexander1987}. In these models, defectors are punished not only by their familiar opponents, but by the larger community. A variety of rich models of indirect reciprocity have emerged\autocite{Sigmund2012}, and it remains an active area of research. Mechanisms of indirect reciprocity have also been shown to promote the evolution of cooperation. However, indirect reciprocity usually requires significant cognitave capacity on the part of its players, and is consequently thought to be most applicable to humans.
+
+% Draws a lattice spatial mock-up
+%=====================================================================================================================%
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\draw[step=1,thick,draw=white!40!black] (0,-4) grid (8,0);
+\foreach \x in {0,...,8} {
+    \foreach \y in {0,...,4} {
+        \pgfmathtruncatemacro{\nodelabel}{\x+\y*9+1}
+        \node[circle,draw=black,fill=white!80!black,minimum size=15] (\nodelabel) at (\x,-\y) {};
+    }
+}
+\node[circle,draw=black,fill=green,minimum size=15] (player) at (4,-2) {};
+\node[circle,draw=black,fill=red,minimum size=15] (op_top) at (4,-3) {};
+\node[circle,draw=black,fill=red,minimum size=15] (op_bot) at (4,-1) {};
+\node[circle,draw=black,fill=red,minimum size=15] (op_right) at (5,-2) {};
+\node[circle,draw=black,fill=red,minimum size=15] (op_left) at (3,-2) {};
+\end{tikzpicture}
+\caption[A spatial model of game interactions][1.2in]{An example of a simple spatial model on a lattice structure. A given player (in green) may only interact with its four immediate neighbours (in red). This marks a departure from non-spatial models because individuals farther away from the player (in gray) are not candidates for interaction.}
+\label{fig:lattice}
+\end{figure}
+
+\subsection{Spatial Models, Markets \& Partner Choice}
+
+Reciprocal models and inclusive fitness have long been the central topic of research in the evolution of cooperation, but alternative mechanisms have been gaining more currency in recent years\autocite{Leimar2010}. To begin with, relatively simple models of game-theoretic interaction between individuals often assume no spatial structure. That is, organisms are equally likely to interact with one another. However, this does not capture phenomena such as the clustering of cooperating individuals that is present in a model where some element of locality is imposed on interactions\autocite{Durrett1994}. There are a variety of conditions under which, for example, a cooperating strategy may all but disappear, only to flourish once defection has become the norm. In a non-spatial model, cooperators would not have been able to form their own isolated communities, and thus spatial models seem to promote the evolution of cooperation.
+
+In a similar vein, models which account for market effects---that is, some amount of choice between opponents---also seem to promote the evolution of cooperation. Stable pair formation, for example, cannot be accomplished by oft-defecting organisms, and a substantial amount of empirical evidence has been assembled to illustrate the influence of a mechanism for pair choice on cooperation and exploitation\autocite{Leimar2010,McNamara2010}. Players can escape the need for sophisticated reciprocal deductions by instead focusing on whether they are satisfied or not by their most recent game, and choose to leave their partners if so desired.
+
+\section{Criticism \& Problem of Interest}
+
+Despite its relative prominence in the history of modelling the evolution of cooperation, the applicability of reciprocal models have been heavily criticised. Trivers\autocite{Trivers1971} originally pointed to the high cognitive requirements imposed by models of reciprocity, but with the discovery that simple reciprocal models could promote the evolution of cooperation, this problem was largely sidelined. A body of evidence has been assembled to demonstrate the presence of reciprocal strategies among real organisms, but that evidence has been summarily dismissed by some authors\autocite{Connor2010}. In particular, by-product mutualisms, pseudo-reciprocity, and market effects have been offered up as fitting the observed data better than reciprocal models\autocite{Hauser2009}. For this reason, I have decided to focus more on alternative models, and in particular on market effects, in order to build a model that can incorporate non-humans.
+
+A fairly recent development is to consider the effects of some level of persistant variation among individuals in the population. Initial results seem to indicate that the introduction of this element does not, as previously believed, simply cancel out in the context of a large population. Rather, it seems as though introducing some variation facilitates the evolution of cooperation\autocite{McNamara2010}. Thusfar, studies of this kind seem to have been exclusively conducted on variation in strategies. To me, the obvious question is then: \emph{what are the effects of persistent individual variation in payoffs?}
+
+In his recent review of the field, Nowak\autocite{Nowak2012} identified something along these lines as particularly understudied:
+
+\begin{quote}
+``Evolutionary games are typically studied in populations of equals, where everyone has the same background payoff, same endowment or strength. Breaking this symmetry should have important consequences.''
+\end{quote}
+
+\noindent Although as to \emph{why} this should have such consequences is not elaborated upon, although there is some work to suggest that organisms who can affect their payoffs with investment strategies will do so\autocite{Doebeli1998}. In the next section, I will examine some of the biological and mathematical motivations for considering a model where individual variation occurs on the level of fitness payoffs.
