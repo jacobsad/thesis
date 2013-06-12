@@ -1,0 +1,34 @@
+# ==========================================
+# TODO File
+# ==========================================
+
+For a draft:
+ ☐ Fix dates
+ ☐ Remove? preface
+ ☐ Write email to Dr. Bolker
+
+Bullet Sections:
+ ☐ Modelling EGT
+ ☐ Interpreting Variation
+ ☐ Choosing A Game
+ ☐ Mutation
+
+Content:
+ ☐ Reference to PD needs to be adjusted
+     ☐ In Application to te Common PD
+     ☐ In Constructing Individuals
+ ☐ Add source code (or reference to git?)
+ ☐ Add in last robustness test (s4)
+
+Pre-Content:
+ ☐ Fix font references
+ ☐ Update preface text to reflect changes in structure
+
+Bibliographic information:
+ ☐ Fix the last outstanding reference (pp. 13)
+ ☐ Consolidate .bib files and remove unused references
+ ☐ Get doi links wherever possible
+ ☐ Remove URL links
+
+Misc:
+ ☐ Use tikz-device across all earlier chapters
