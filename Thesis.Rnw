@@ -1,0 +1,238 @@
+\documentclass[justified,notoc,nobib,nohyper,symmetric]{tufte-book} %symmetric for page alternation
+
+% Packages
+%=====================================================================================================================%
+\usepackage[reqno]{amsmath}
+\usepackage[utf8]{inputenc}
+\makeatletter
+\let\tufte@caption\@caption  
+\usepackage[hyperfootnotes=false, colorlinks=true, urlcolor=DarkBlue, citecolor=Black, linkcolor=Black, pdftitle={Thesis}, pdfauthor={Aaron Jacobs}, pdfkeywords={Evolution of Cooperation, Individual Variation, Thesis}]{hyperref}
+\let\@caption\tufte@caption
+%\makeatother
+
+\usepackage{amsthm, dsfont, tikz, appendix, hyphenat, array, multirow, booktabs, datetime}
+
+% References & Bibliography
+\usepackage[style=verbose,autocite=footnote,backend=biber,bibstyle=numeric]{biblatex}
+\addbibresource{Packages.bib}
+\addbibresource{ImportantRefs.bib}
+\DeclareFieldFormat{labelnumberwidth}{\mkbibparens{#1}}
+
+% Configuration
+%=====================================================================================================================%
+
+% For XeLaTeX, if so desired
+% \renewcommand{\allcapsspacing}[1]{{\addfontfeature{LetterSpace=20.0}#1}}
+% \renewcommand{\smallcapsspacing}[1]{{\addfontfeature{LetterSpace=5.0}#1}}
+% \renewcommand{\textsc}[1]{\smallcapsspacing{\textsmallcaps{#1}}}
+% \renewcommand{\smallcaps}[1]{\smallcapsspacing{\scshape\MakeTextLowercase{#1}}}
+%
+% \usepackage{fontspec,xltxtra,xunicode}
+% \defaultfontfeatures{Mapping=tex-text}
+% \setromanfont[Ligatures=TeX]{Minion Pro}
+% \setsansfont[Ligatures=TeX,Scale=MatchLowercase]{Helvetica}
+% \setmonofont[Scale=MatchLowercase]{Menlo}
+
+% Define a list of illustrations
+\makeatletter
+\providecommand\phantomsection{}
+\newcommand\listofillustrations{
+    \chapter*{List of Illustrations}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{List of Illustrations}%
+    %\section*{Figures}%
+    \phantomsection
+    \addcontentsline{toc}{section}{\protect\numberline{}Figures}%
+    \@starttoc{lof}%
+    \bigskip
+    %\section*{Tables}%
+    \phantomsection
+    \addcontentsline{toc}{section}{\protect\numberline{}Tables}%
+    \@starttoc{lot}}
+\makeatother
+
+% Get rid of page numbers on Part pages (identical to the default, just with empty pagestyle)
+\makeatletter
+\renewcommand\part{
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \thispagestyle{empty}%
+    \if@twocolumn
+        \onecolumn
+        \@tempswatrue
+    \else
+        \@tempswafalse
+    \fi
+    \null\vfil
+    \secdef\@part\@spart
+}
+\makeatother
+
+% Add page numbers to chapters
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[RO,RE]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% Additional configuration
+\frenchspacing
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{4}
+\setlength\marginparpush{15pt}
+
+\title{Cooperation and Individual Variation}
+\author{Aaron Jacobs}
+
+%=====================================================================================================================%
+% DOCUMENT
+%=====================================================================================================================%
+\begin{document}
+	
+\frontmatter
+	
+% Title Page
+%=====================================================================================================================%
+\begin{titlepage}
+  \begin{fullwidth}
+  \begin{center}
+    \phantom{Page Header}
+
+    \vfill
+
+    Working Title: Evolution of cooperation \& individual variation
+
+    \vspace{1cm}
+
+    Aaron Jacobs
+
+    \vspace{1cm}
+
+    Supervisor: Dr. Ben Bolker \\ \textit{Department of Mathematics \& Statistics}
+
+    \vfill
+    \line(1,0){200}
+    \vfill
+
+    Presented to the Arts \& Science Program \\ as the Thesis Component of \\ \textsc{Arts \& Science 4a06}
+
+    \vspace{1cm}
+
+    In Partial Fulfilment \\ of the Requirements for the Degree \\ \textsc{B. A. Sc. (Honours)}
+
+    \vfill
+    \line(1,0){200}
+    \vfill
+
+    McMaster University \\ \textit{Hamilton, ON}
+
+    \vspace{1cm}
+
+    May 2013
+
+    \vfill
+  \end{center}
+  \end{fullwidth}
+\end{titlepage}
+    
+% Preface
+%=====================================================================================================================%
+\chapter*{}
+
+\vfill
+
+This document is the result of independent study/thesis work I conducted to fulfil my requirements for \textsc{Arts \& Science 4a06}. It does not take the form of a ``thesis'', in that it is not primarily intended to present research conclusions or argue for a particular point. Rather, it is broadly divided into two sections that articulate and then approach the question that I settled on as a culminating project. I have called them ``Motivation'' and ``Method'', respectively.
+
+In the first section, I will outline some of the ideas I was exposed to in the course of my research in evolutionary game theory, and state the problem that I decided to focus on, which concerns the role that individual variation plays in the evolution of cooperation. In the second section, I will present more explicitly the model that I constructed, focusing on particularly interesting aspects of the program in a loose, problem-and-solution format. The final chapter of the section deals with the conclusions I was able to draw from my simulations, and some of the unresolved difficulties they presented me with.
+
+I would like to extend my heartfelt gratitude to my thesis supervisor, Dr. Ben Bolker, as well as Dr. Jean Wilson and Shelley Anderson in the Arts \& Science Program. Their incredible patience is the only way that I was able to produce this document. \\
+
+\hfill \textit{Aaron Jacobs}
+
+\hfill \textit{Hamilton, ON}
+  
+\hfill May 2013
+
+\vfill
+
+% Document Notes
+%=====================================================================================================================%
+\newpage
+
+\phantom{End Note}
+
+\vfill
+
+%\noindent All rights reserved. \\
+
+\noindent This document has been typeset by the author using~\LaTeX, in particular using the \href{https://code.google.com/p/tufte-latex/}{\texttt{tufte-latex}} package for creating what might be considered beautiful books. \\
+
+\noindent The body type is set in Hermann Zapf's Palatino font, the sans font used both in-text and in the generated graphics is Max Miedinger's Helvetica, and the monospace font is Jim Lyles' Vera, which has been repackaged for~\LaTeX~as Bera Mono. \\
+
+\noindent The author has also made use of Yihui Xie's \href{http://yihui.name/knitr/}{\texttt{knitr}} package for incorporating \emph{R} code and graphics into the body of the document. \\
+
+\noindent If you are interested in making use of any of the techniques you see here yourself, the author may be reached at \href{mailto:jacobsad@mcmaster.ca}{\texttt{jacobsad@mcmaster.ca}}. \\
+
+\noindent This document was last compiled on~\today~at~\currenttime.
+
+\vfill
+
+\tableofcontents
+
+\listofillustrations
+	
+\mainmatter
+	
+% Main Content
+%=====================================================================================================================%
+%\part{Motivation}
+
+% Introduction
+<<introduction, child='./introduction/Introduction.Rnw'>>=
+@
+
+\chapter{Motivation}
+
+% Altruism and Cooperation
+<<altriusm-and-cooperation, child='./evolution-of-cooperation/AltruismAndCooperation.Rnw'>>=
+@
+
+% Individual Variation
+<<animal-personality, child='./animal-personality/AnimalPersonality.Rnw'>>=
+@
+
+\chapter{Method}
+
+% Choosing a Game
+<<choosing-a-game, child='./choosing-a-game/ChoosingAGame.Rnw'>>=
+@
+
+% Individuals with Variation
+<<individual-variation, child='./individual-variation/IndividualVariation.Rnw'>>=
+@
+
+% Strategy, Tolerance, and Mutation
+<<strategy-and-mutation, child='./strategy-and-mutation/StrategyAndMutation.Rnw'>>=
+@
+
+\chapter{Results \& Conclusions}
+
+% Results & Conclusions
+<<fin, child='./results/Results.Rnw'>>=
+@
+
+% Appendices
+%=====================================================================================================================%
+\appendix
+\addappheadtotoc
+
+\chapter*{Full Source Code}
+
+This is where the source code goes.
+
+% Bibliography
+%=====================================================================================================================%
+\addcontentsline{toc}{chapter}{Full Bibliography}
+\printbibliography
+	
+\end{document}
