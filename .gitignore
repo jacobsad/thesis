@@ -6,6 +6,7 @@
 # R-generated junk
 # -----------------------------------------------
 .Rhistory
+cache/
 
 
 # LaTeX-generated output & junk
@@ -29,4 +30,4 @@
 # Since the actual document is written in knitr,
 # the .tex files are not required.
 # -----------------------------------------------
-Thesis.tex
+*.tex
