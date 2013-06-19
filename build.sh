@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# ==========================================
+# Build Script (A Poor Man's Makefile)
+# ==========================================
+#
+# Run to compile the sources to pdf.
+# 
+# One may also specify the --clean option, 
+# which will remove all extraneous files 
+# created by compiling the document.
+# 
+# ==========================================
+
 tex_path='/usr/texbin'
 
 trash_files='Thesis.run.xml Thesis.synctex.gz ImportantRefs.bib.bak'
