@@ -12,7 +12,7 @@ Before introducing the main question that I decided to focus on, however, a shor
 % Cute picture
 \begin{marginfigure}[-2in]
 \centering
-\includegraphics[width=2in]{../images/blotched-lizard-2.jpg}
+\includegraphics[width=2in]{images/blotched-lizard-2.jpg}
 \vspace{0.25cm}
 \caption[\emph{Uta stansburiana}]{The common side-blotched lizard, \emph{Uta stansburiana}. Known for the curious resemblance its mating patterns bear to the game of Rock, Paper, Scissors. Reproduced under the CC-by-SA license from \cite{Tuszynski2011}.}
 \label{fig:lizard}

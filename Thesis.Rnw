@@ -21,18 +21,6 @@
 % Configuration
 %=====================================================================================================================%
 
-% For XeLaTeX, if so desired
-% \renewcommand{\allcapsspacing}[1]{{\addfontfeature{LetterSpace=20.0}#1}}
-% \renewcommand{\smallcapsspacing}[1]{{\addfontfeature{LetterSpace=5.0}#1}}
-% \renewcommand{\textsc}[1]{\smallcapsspacing{\textsmallcaps{#1}}}
-% \renewcommand{\smallcaps}[1]{\smallcapsspacing{\scshape\MakeTextLowercase{#1}}}
-%
-% \usepackage{fontspec,xltxtra,xunicode}
-% \defaultfontfeatures{Mapping=tex-text}
-% \setromanfont[Ligatures=TeX]{Minion Pro}
-% \setsansfont[Ligatures=TeX,Scale=MatchLowercase]{Helvetica}
-% \setmonofont[Scale=MatchLowercase]{Menlo}
-
 % Define a list of illustrations
 \makeatletter
 \providecommand\phantomsection{}
@@ -185,8 +173,6 @@ I would like to extend my heartfelt gratitude to my thesis supervisor, Dr. Ben B
 	
 % Main Content
 %=====================================================================================================================%
-%\part{Motivation}
-
 % Introduction
 <<introduction, child='./introduction/Introduction.Rnw'>>=
 @
@@ -214,8 +200,6 @@ I would like to extend my heartfelt gratitude to my thesis supervisor, Dr. Ben B
 % Strategy, Tolerance, and Mutation
 <<strategy-and-mutation, child='./strategy-and-mutation/StrategyAndMutation.Rnw'>>=
 @
-
-\chapter{Results \& Conclusions}
 
 % Results & Conclusions
 <<fin, child='./results/Results.Rnw'>>=
