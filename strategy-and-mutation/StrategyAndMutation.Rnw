@@ -56,15 +56,7 @@ l <- c(rep("(2.0, 2.0)", times=100), rep("(1.0, 1.0)", times=100), rep("(5.0, 2.
 m <- seq(0, 1, length = 100)
 n <- c(dbeta(m, 2, 2), dbeta(m, 1, 1), dbeta(m, 5, 2), dbeta(m, 0.1, 0.1), dbeta(m, 5, 5), dbeta(m, 2, 5))
 df <- data.frame(x = rep(m, times=6), y = n, shape <- l)
-ggplot(df, aes(x = x, y = n)) + geom_line(aes(color = shape)) + xlab('\\emph{p}') + ylab('Probability Density') + ylim(c(0, 2.5)) + 
-    theme(legend.position="right", 
-          #axis.title.y = element_text(family = "Gill Sans MT", size = 18), 
-          #axis.title.y = element_blank(),
-          #axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18),
-          #legend.title = element_text(family = "Gill Sans MT", size = 18, face = "plain", hjust = 0.5),
-          legend.title = element_blank(),
-          #legend.text = element_text(family = "Helvetica", size = 14),
-          legend.key.size = unit(20, "pt"))
+ggplot(df, aes(x = x, y = n)) + geom_line(aes(color = shape)) + xlab('\\emph{p}') + ylab('Probability Density') + ylim(c(0, 2.5)) + theme(legend.position="right", legend.title = element_blank(), legend.key.size = unit(20, "pt"))
 @
 
 \subsection{Implementation in \emph{R}}
