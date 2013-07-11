@@ -14,22 +14,13 @@ suppressWarnings(suppressMessages(require(MCMCpack)))
 suppressWarnings(suppressMessages(require(vcd)))
 @
 
-How can players have different payoffs while still playing the same game? Recall that the two-player Prisoner's Dilemma is any game that satisfies the single constraint $T > R > P > S$ for both players, where $T, R, P, S$ are elements of the payoff matrix of the form
-
-\begin{equation*}
-\left( \begin{array}{cc}
-    R & S \\
-    T & P \\
-\end{array} \right)
-\end{equation*}
-
-\noindent for each player. There is no requirement that the game be symmetric. This constraint can be reformulated by specifying three positive parameters $\delta_1, \delta_2, \delta_3$ such that
+How can players have different payoffs while still playing the same game? Recall that the two-player Prisoner's Dilemma is any game that satisfies the single constraint $T > R > P > S$ for both players (see figure~\ref{fig:rps} in the earlier chapter). There is no requirement that the game be symmetric; each can have their own TRPS values. This constraint can be reformulated by specifying three positive parameters $\delta_1, \delta_2, \delta_3$ such that
 
 \begin{equation} \label{eq:parameters}
     \delta_1 = T - R \quad \delta_2 = R - P \quad \text{and} \quad \delta_3 = P - S
 \end{equation}
 
-\noindent which reduces the exogenous parameters to $S$ and $C$. The context of evolutionary game theory also imposes an additional constraint on individual payoffs: if payoffs are exposed to evolutionary dynamics, we might expect them to increase without bound. In order to avoid the evolution of so-called Darwinian ``monsters'' (?), the sum of these payoffs can be held at some constant bound $C$, yielding the constraint
+\noindent which reduces the exogenous parameters to $S$ and $C$. The context of evolutionary game theory also imposes an additional constraint on individual payoffs: if payoffs are exposed to evolutionary dynamics, we might expect them to increase without bound. In order to avoid the evolution of a so-called Darwinian ``monster'', the sum of these payoffs can be held at some constant bound $C$, yielding the constraint
 
 \begin{equation*}
 	T + R + P  + S = C
@@ -92,13 +83,10 @@ One possible solution to the problem of satisfying equation~\ref{eq:simplex} is 
 %=====================================================================================================================%
 \section{Application to the Common Prisoner's Dilemma}
 
-What kind of individual variation do we really get with this model of distribution? Recall that the most common numerical formulation of the Prisoner's Dilemma has payoff matrix
+What kind of individual variation do we really get with this model of distribution? Recall that the most common numerical formulation of the Prisoner's Dilemma has
 
 \begin{equation*}
-\left( \begin{array}{cc}
-    3 & 0 \\
-    5 & 1 \\
-\end{array} \right)
+  (T, R, P, S) = (5, 3, 1, 0)
 \end{equation*}
 
 \noindent for both players. In terms of the parameters given in equation~\ref{eq:parameters} we have
@@ -113,9 +101,9 @@ What kind of individual variation do we really get with this model of distributi
     \alpha = (2, 4, 3)
 \end{equation}
 
-\noindent by equation~\ref{eq:alpha-value} will provide appropriate means. The probability density of the Dirichlet distribution with this $\alpha$ appears in figure~\ref{fig:dir-surface}, which has been created using the \emph{lattice} package\autocite{lattice}.
+\noindent by equation~\ref{eq:alpha-value} will provide appropriate means for the payoffs. The probability density of the Dirichlet distribution with this $\alpha$ appears in figure~\ref{fig:dir-surface}, which has been created using the \emph{lattice} package\autocite{lattice}. The values represent fractions of $C - 4S$.
 
-In order to emulate variation around these values, we could sample from a Dirichlet distribution with $\alpha = (2, 4, 3)$ and scale the results by $C$ --- which, in this case, is $9$. This is a fairly simple algorithm, and can be implemented in \emph{R} without much difficulty.
+In order to emulate variation, we can sample from a Dirichlet distribution with $\alpha = (2, 4, 3)$ and scale the results by $C - 4S$ --- which, in this case, is $9$. This is a fairly simple algorithm, and can be implemented in \emph{R} without much difficulty.
 
 % Draws the Dirichlet distribution for (2, 4, 3) in a ternary surface plot (fig:dir-surfac)
 %=====================================================================================================================%

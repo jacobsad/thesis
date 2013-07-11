@@ -251,12 +251,4 @@ Smith and Price used the ESS to analyse a version of what is called the Hawk-Dov
 
 \subsection{Modelling Evolution using EGT}
 
-Not yet finished.
-
-% Notes
-\begin{itemize}
-    
-    \item It's often about modelling populations using simulation
-    
-    \item Analytical solutions are not usually forthcoming --- even chaotic behaviour can arise from relatively simple scenarios.
-\end{itemize}
+The ESS gives us a tool for analysing the `evolutionary' dimension of behaviour that can be modelled by games. However, in reality we are usually concerned with games that do not have a straightforward solution, or even any analytical solution at all. Even simple models can result in genuinely chaotic behaviour\autocite{Nowak1993}. For this reason, using evolutionary game theory usually means building population models with multiple mechanisms for interaction and behaviour, of which the `game-theoretic' interaction is only a part of the picture. It is these kinds of models that the remainder of this work considers.

@@ -51,20 +51,20 @@ The Beta distribution requires only two positive ``shape'' parameters $\alpha$ a
 
 % Draws some nice beta densities
 %=====================================================================================================================%
-<<beta-dist, tidy=FALSE, echo=FALSE, warning=FALSE, fig.align='center', out.width='\\textwidth', out.height='0.75\\textwidth', fig.cap=paste('Probability densities for various shapes of the Beta distribution. This distribution allows a wide variety of initial conditions for the level of cooperation.', sep = ""), fig.env='figure'>>=
+<<beta-dist, tidy=FALSE, echo=FALSE, warning=FALSE, fig.align='center', fig.height=4.5, fig.width=6, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('Probability densities for various shapes of the Beta distribution. This distribution allows a wide variety of initial conditions for the level of cooperation.', sep = ""), fig.env='figure', dev='tikz', pdfcrop=TRUE>>=
 l <- c(rep("(2.0, 2.0)", times=100), rep("(1.0, 1.0)", times=100), rep("(5.0, 2.0)", times=100), rep("(0.1, 0.1)", times=100), rep("(5.0, 5.0)", times=100), rep("(2.0, 5.0)", times=100))
 m <- seq(0, 1, length = 100)
 n <- c(dbeta(m, 2, 2), dbeta(m, 1, 1), dbeta(m, 5, 2), dbeta(m, 0.1, 0.1), dbeta(m, 5, 5), dbeta(m, 2, 5))
 df <- data.frame(x = rep(m, times=6), y = n, shape <- l)
-ggplot(df, aes(x = x, y = n)) + geom_line(aes(color = shape)) + xlab('p') + ylab('Probability Density') + ylim(c(0, 2.5)) + 
-    theme(legend.position="left", 
+ggplot(df, aes(x = x, y = n)) + geom_line(aes(color = shape)) + xlab('\\emph{p}') + ylab('Probability Density') + ylim(c(0, 2.5)) + 
+    theme(legend.position="right", 
           #axis.title.y = element_text(family = "Gill Sans MT", size = 18), 
-          axis.title.y = element_blank(),
-          axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18),
+          #axis.title.y = element_blank(),
+          #axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18),
           #legend.title = element_text(family = "Gill Sans MT", size = 18, face = "plain", hjust = 0.5),
           legend.title = element_blank(),
-          legend.text = element_text(family = "Helvetica", size = 14),
-          legend.key.size = unit(28, "pt"))
+          #legend.text = element_text(family = "Helvetica", size = 14),
+          legend.key.size = unit(20, "pt"))
 @
 
 \subsection{Implementation in \emph{R}}
@@ -87,12 +87,8 @@ mean(population)
 
 % Draws some more beta densities
 %=====================================================================================================================%
-<<a-pop-dens, tidy=FALSE, echo=FALSE, warning=TRUE, fig.align='center', out.width='2in', out.height='2.2in', fig.cap=paste('Probability density for scenario (a) in red. Notice that it is almost identical to the uniform distribution.', sep = ""), fig.env='marginfigure', fig.pos='-2in'>>=
-ggplot(data.frame(a = population), aes(x = a)) + stat_density(kernel="biweight", aes(x = a, fill = "red", alpha = 0.8)) + 
-    xlab('p') + ylab('Probability Density') + ylim(0, 2.5) +
-    theme(legend.position="none", 
-            axis.title.y = element_text(family = "Helvetica", size = 18),
-            axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18))
+<<a-pop-dens, tidy=FALSE, echo=FALSE, warning=TRUE, fig.align='center', fig.height=4, fig.width=4, out.height='\\textwidth', out.width='\\textwidth', fig.cap=paste('Probability density for scenario (a) in red. Notice that it is almost identical to the uniform distribution.', sep = ""), fig.env='marginfigure', fig.pos='-2in', dev='tikz', pdfcrop=TRUE>>=
+ggplot(data.frame(a = population), aes(x = a)) + stat_density(kernel="biweight", aes(x = a, fill = "red", alpha = 0.8)) + xlab('\\emph{p}') + ylab('Probability Density') + ylim(0, 2.5) + theme(legend.position="none") 
 @
 
 \noindent In the more interesting cases of (b), (c), and (d):
@@ -118,17 +114,14 @@ pop <- ggplot(data.frame(c = pop_c, b = pop_b, d = pop_d),
               aes(x = d, fill = "blue", alpha = 0.8))
 @
 
-\noindent The results are visible in figure~\ref{fig:beta-pop-dens}.
+\noindent The results are visible in figure~\ref{fig:beta-pop-dens}; contrast figure~\ref{fig:a-pop-dens}.
 
 % Draws EVEN MORE beta densities
 %=====================================================================================================================%
-<<beta-pop-dens, tidy=FALSE, echo=FALSE, warning=TRUE, fig.align='center', out.width='2in', out.height='2.2in', fig.cap=paste('Probability densities for scenarios (b), (c), and (d) in blue, green, and red respectively.', sep = ""), fig.env='marginfigure', fig.pos='-2in'>>=
-pop + xlab('p') + ylab('Probability Density') + 
-      theme(legend.position="none", 
-            axis.title.y = element_text(family = "Helvetica", size = 18),
-            axis.title.x = element_text(family = "Helvetica", face = "italic", size = 18))
+<<beta-pop-dens, tidy=FALSE, echo=FALSE, warning=TRUE, fig.align='center', fig.height=4, fig.width=4, out.height='\\textwidth', out.width='\\textwidth', fig.cap=paste('Probability densities for scenarios (b), (c), and (d) in blue, green, and red respectively.', sep = ""), fig.env='marginfigure', fig.pos='-2in', dev='tikz', pdfcrop=TRUE>>=
+pop + xlab('\\emph{p}') + ylab('Probability Density') + theme(legend.position="none")
 @
 
 \section{Mutation}
 
-In order for the population to maintain variation among individuals, inheritance must be subject to mutation. In fact, in the context of the evolution of cooperation the presence of a mechanism to preserve varation (usually, mutation) appears to be paramount\autocite{McNamara2004}.
+In order for the population to maintain variation among individuals, inheritance must be subject to mutation. In fact, in the context of the evolution of cooperation the presence of a mechanism to preserve variation (usually, mutation) appears to be paramount\autocite{McNamara2004}. For the model, a very simple kind of mutation was chosen based on the normal distribution.

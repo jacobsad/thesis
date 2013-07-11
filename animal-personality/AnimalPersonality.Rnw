@@ -29,6 +29,6 @@ The last feature demands another dimension be added to models involving individu
 
 \subsection{Interpreting Variation in Payoffs}
 
-Existing analysis of individual variation has focused on variation in strategies, and thus I should devote some attention to defending a shift to variation in payoffs. What does it mean for two organisms to have different payoffs for the same strategy? 
+Existing analysis of individual variation has focused on variation in strategies, and thus I should devote some attention to defending a shift to variation in payoffs. What does it mean for two organisms to have different payoffs for the same strategy?
 
----Different capacity to capitalize on interactions?
+Although I don't have an empirical basis for doing so, I hypothesize that individual variation in payoffs reflects organisms' varying capabilities to capitalize on specific interactions, namely the ones that are being modelled as a game. It seems to me that the fitness gleaned by the game-like interaction should vary; not every interaction is the same. In the case of the Prisoner's Dilemma, some cheaters are simply \emph{better} at cheating, and get more out of it. Conversely, some cooperators are able to get more out of cooperating.

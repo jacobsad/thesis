@@ -5,4 +5,6 @@
 % Chapter on pd, etc.
 %=====================================================================================================================%
 
----PD or snowdrift: problems getting cooperation to evolve, more complicated
+What model would provide a way to investigate this topic? In the end, I decided to focus on the Prisoner's Dilemma and a pair-matching mechanism. Why? In part, for ease of construction; a population playing the Prisoner's Dilemma (despite being more strict) is easier to induce cooperation in than one playing the Snowdrift game (which would be the only other choice). For simplicity, I have also made us of the most common formulation of the PD, where $(T, R, P, S) = (5, 3, 1, 0)$\autocite{Press2012}.
+
+As to the pair-matching mechanism: the previous chapter included a critique of the more common approaches that I found sensible. Also, if there is sufficient incentive to form stable pairs, it is known that cooperation may evolve. Moreover, it is known that some individual variation in strategies is conducive to this evolution\autocite{McNamara2010}. What remained were several challenges of implementation: creating a population with individual variation in payoffs; defining strategies, the response to strategies (called tolerance), and mutation; and building the algorithm for the model itself. Each of these challenges aside from the last is discussed in some detail as follows. The full implementation of the model can be found in the appendix, and the scenarios discussed in the Results chapter are available as standalone \emph{R} scripts.

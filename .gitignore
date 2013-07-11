@@ -28,6 +28,7 @@ cache/
 *.synctex.gz
 *.toc
 *-blx.bib
+Thesis.bib
 
 
 # Since the actual document is written in knitr,
@@ -38,6 +39,7 @@ cache/
 
 # Misc
 # -----------------------------------------------
+*.sublime-project
 *.asy
 *.pre
 individual-variation/Test.Rnw

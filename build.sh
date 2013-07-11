@@ -14,11 +14,12 @@
 
 tex_path='/usr/texbin'
 
-trash_files='Thesis.run.xml Thesis.synctex.gz ImportantRefs.bib.bak'
+trash_files='Thesis.run.xml Thesis.synctex.gz ImportantRefs.bib.bak Thesis.bbl AltruismAndCooperation.tex AnimalPersonality.tex ChoosingAGame.tex IndividualVariation.tex Introduction.tex Results.tex StrategyAndMutation.tex'
 
 if [ "$1" == '--clean' ]; then
 	echo 'Cleanup requested.';
 	$tex_path/latexmk --c;
+	# If the "trash" program is not available, use rm instead
 	for file in $trash_files; do
 		if [ -a $file ]; then
 			trash -v "$file"
@@ -33,4 +34,4 @@ Rscript -e "library(knitr); knit('Thesis.Rnw')";
 # Since that isn't powerful enough to deal 
 # with all the cross-referencing, run it 
 # through pdflatex again.
-$tex_path/latexmk -cd -pdflatex="$tex_path/pdflatex -interaction=nonstopmode -synctex=1" -f -pdf Thesis.tex
+$tex_path/latexmk -cd -pdflatex="$tex_path/pdflatex -interaction=nonstopmode -synctex=1" -f -pdf Thesis.tex;

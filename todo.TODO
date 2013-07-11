@@ -5,20 +5,21 @@
 For a draft:
  ☐ Fix dates
  ☐ Remove? preface
- ☐ Write email to Dr. Bolker
+ ✔ Write email to Dr. Bolker @done (13-07-10 17:18)
 
 Bullet Sections:
- ☐ Modelling EGT
- ☐ Interpreting Variation
- ☐ Choosing A Game
- ☐ Mutation
+ ✔ Modelling EGT @done (13-07-10 16:51)
+ ✔ Interpreting Variation @done (13-07-10 17:17)
+ ✔ Choosing A Game @done (13-07-10 17:33)
+ ✔ Mutation @done (13-07-10 17:37)
 
 Content:
- ☐ Reference to PD needs to be adjusted
-     ☐ In Application to te Common PD
-     ☐ In Constructing Individuals
+ ✔ Reference to PD needs to be adjusted @done (13-07-10 18:20)
+     ✔ In Application to te Common PD @done (13-07-10 18:20)
+     ✔ In Constructing Individuals @done (13-07-10 18:20)
  ☐ Add source code (or reference to git?)
  ☐ Add in last robustness test (s4)
+ ☐ Flesh out Results structure
 
 Pre-Content:
  ☐ Fix font references
@@ -31,4 +32,4 @@ Bibliographic information:
  ☐ Remove URL links
 
 Misc:
- ☐ Use tikz-device across all earlier chapters
+ ✔ Use tikz-device across all earlier chapters @done (13-07-10 18:45)
