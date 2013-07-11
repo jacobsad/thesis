@@ -12,8 +12,8 @@ opts_chunk$set(fig.path = 'figure/', fig.align = 'center', fig.show = 'hold')
 options(replace.assign = TRUE, width = 80)
 options(tikzMetricPackages = c("\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}", "\\usetikzlibrary{calc}", "\\usepackage{hyperref}"))
 knit_hooks$set(pdfcrop = hook_pdfcrop)
-suppressWarnings(suppressMessages(require(extrafont)))
-loadfonts(device="postscript")
+#suppressWarnings(suppressMessages(require(extrafont)))
+#loadfonts(device="postscript")
 suppressWarnings(suppressMessages(require(ggplot2)))
 suppressWarnings(suppressMessages(require(gridExtra)))
 suppressWarnings(suppressMessages(require(MCMCpack)))
@@ -60,7 +60,7 @@ s1_data <- data.frame(cooperation = cooperation, gen = rep(1:generations, times 
 @
 
 % Prints the figure for scenario 1
-<<s1,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3.75, fig.width=5, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('The simplest case. Cooperation levels when pair formation does not occur and players have pure strategies with no individual variation. $N = ', N, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='0in', dev='tikz'>>=
+<<s1,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3, fig.width=4, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('The simplest case. Cooperation levels when pair formation does not occur and players have pure strategies with no individual variation. $N = ', N, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='-3in', dev='tikz', pdfcrop=TRUE>>=
 g <- ggplot(s1_data, aes(x = gen, y = cooperation)) + geom_line(size = 1.5, aes(color = mort)) + xlab('Generations') + ylab('Cooperation Level $p$') #+ ylim(c(0, 1.0))
 g + theme(legend.position=c(0.7, 0.7), legend.title = element_text(face = "plain"), legend.title.align = 0.5, legend.text.align = 0.5) + scale_colour_discrete(name = "Mortality Rate $m$")
 @
@@ -72,7 +72,7 @@ load("../experiment/s2.Rdata")
 
 Next, we can address a population with a non-uniform distribution. In doing so, it also makes sense to broaden the available strategies beyond the pure options. As a consequence of the model's mechanism for reproduction, this also demands introducing the potential for mutation. Otherwise, one can encounter scenarios in which, by random chance, all individuals in a population are eventually identical, and no further change can occur. An example of this can be seen in figure~\ref{fig:s2}, where by the 400th generation all individuals have the $p$-value \Sexpr{const}.
 
-<<s2,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3.75, fig.width=5, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('A potential failure case. When mutation is not present, it is possible by random drift for sufficiently small populations to become filled with identical individuals. $N = ', N, '$, $m = ', mortality, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='0in', dev='tikz'>>=
+<<s2,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3, fig.width=4, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('A potential failure case. When mutation is not present, it is possible by random drift for sufficiently small populations to become filled with identical individuals. $N = ', N, '$, $m = ', mortality, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='-0.5in', dev='tikz', pdfcrop=TRUE>>=
 ggplot(s2_data, aes(x = 1:generations, y = cooperation)) + geom_line(size = 1.5, color = "red") + xlab('Generations') + ylab('Cooperation Level $p$') + ylim(c(0.2, 0.8))
 @
 
@@ -81,13 +81,25 @@ ggplot(s2_data, aes(x = 1:generations, y = cooperation)) + geom_line(size = 1.5,
 load("../experiment/s3.Rdata")
 @
 
-Introducing mutation dramatically increases the complexity of the model. An example of this can be seen in figure~\ref{fig:s3}, where a high level of mutation introduces temporary `comebacks' in the level of cooperation in the labelled regions A and B. However, 
+Introducing mutation dramatically increases the complexity of the model. An example of this can be seen in figure~\ref{fig:s3}, where a high level of mutation introduces temporary `comebacks' in the level of cooperation in the labelled regions A and B. Another consequence is that the timescale for the experiment increases dramatically, making it difficult to really know if what looks like equilibrium is really just a temporary state.
 
-<<s3,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3.75, fig.width=5, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('Comebacks. When mutation rates are high, it is possible for unsustainable levels of cooperation to emerge for short periods of time: see in particular the labelled regions A and B. $N = ', N, '$, $m = ', mortality, '$, $\\mu = ', std_dev, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', dev='tikz'>>=
+<<s3,tidy=FALSE, echo=FALSE, fig.align='center', fig.height=3, fig.width=4, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('Comebacks. When mutation rates are high, it is possible for unsustainable levels of cooperation to emerge for short periods of time: see in particular the labelled regions A and B. $N = ', N, '$, $m = ', mortality, '$, $\\mu = ', std_dev, '$, $shape = (', beta_1, ',', beta_2, ')$.', sep = ""), fig.env='marginfigure', fig.pos='0in', dev='tikz', pdfcrop=TRUE>>=
 ggplot(s3_data, aes(x = 1:generations, y = cooperation)) + geom_line(size = 1.5, color = "red") + 
     xlab('Generations') + ylab('Cooperation Level $p$') + ylim(c(0, 0.3)) + 
     annotate("text", x = 675, y = 0.04, label = "A") + 
     annotate("text", x = 1350, y = 0.03, label = "B")
 @
 
-\noindent One consequence of moving away from non-pure strategies is that the timescale increases dramatically.
+However, in the long term the level of cooperation in a population still appears to fall to near-zero, as can be seen in figure~\ref{fig:s4}. Thus the model seems to behave as expected in the absence of pair formation.
+
+\subsection{With Pair Formation}
+
+Introducing pair formation should, under the right conditions, induce the evolution of cooperation.
+
+\section{With Individual Variation}
+
+The final test of the model is to run it at full capacity --- that is, enable individual variation in payoffs --- and examine the outcome of similar scenarios with and without this dimension.
+
+\section{Final Remarks}
+
+What conclusions can be drawn from this? Sadly, I have not been able to find any.

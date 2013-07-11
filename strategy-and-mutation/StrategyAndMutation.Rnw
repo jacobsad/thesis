@@ -51,7 +51,7 @@ The Beta distribution requires only two positive ``shape'' parameters $\alpha$ a
 
 % Draws some nice beta densities
 %=====================================================================================================================%
-<<beta-dist, tidy=FALSE, echo=FALSE, warning=FALSE, fig.align='center', fig.height=4.5, fig.width=6, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('Probability densities for various shapes of the Beta distribution. This distribution allows a wide variety of initial conditions for the level of cooperation.', sep = ""), fig.env='figure', dev='tikz', pdfcrop=TRUE>>=
+<<beta-dist, tidy=FALSE, echo=FALSE, warning=FALSE, fig.align='center', fig.height=4.5, fig.width=6, out.height='0.75\\textwidth', out.width='\\textwidth', fig.cap=paste('Probability densities for various shapes of the Beta distribution. This distribution allows a wide variety of initial conditions for the level of cooperation, \\emph{p}.', sep = ""), fig.env='figure', dev='tikz', pdfcrop=TRUE>>=
 l <- c(rep("(2.0, 2.0)", times=100), rep("(1.0, 1.0)", times=100), rep("(5.0, 2.0)", times=100), rep("(0.1, 0.1)", times=100), rep("(5.0, 5.0)", times=100), rep("(2.0, 5.0)", times=100))
 m <- seq(0, 1, length = 100)
 n <- c(dbeta(m, 2, 2), dbeta(m, 1, 1), dbeta(m, 5, 2), dbeta(m, 0.1, 0.1), dbeta(m, 5, 5), dbeta(m, 2, 5))
